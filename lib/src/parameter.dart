@@ -65,6 +65,18 @@ class Parameter {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Parameter &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          _value == other._value &&
+          type == other.type;
+
+  @override
+  int get hashCode => name.hashCode ^ _value.hashCode ^ type.hashCode;
+
+  @override
   String toString() {
     return 'Parameter{name: $name, _value: $_value, type: $type}';
   }
