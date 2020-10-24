@@ -10,8 +10,8 @@ class Command {
   Command({@required this.type, @required this.id, this.parameters = const {}});
 
   String get str {
-    var paramString = parameters.map((p) => p.str).join(', ');
-    paramString = paramString.isEmpty ? '' : ', $paramString';
+    var paramString = parameters.map((p) => p.str).join(',');
+    paramString = paramString.isEmpty ? '' : ',$paramString';
     return '$type($id$paramString)';
   }
 
@@ -33,10 +33,10 @@ class Command {
     }
 
     return Command(
-        type: type, id: id, parameters: parameterListFromString(params));
+        type: type, id: id, parameters: _parameterListFromString(params));
   }
 
-  static Set<Parameter> parameterListFromString(String str) {
+  static Set<Parameter> _parameterListFromString(String str) {
     if (str == null || str.isEmpty) return {};
     final split = <Parameter>{};
 

@@ -1,5 +1,5 @@
-import 'package:ecos_communicator/src/parameter.dart';
 import 'package:test/test.dart';
+import 'package:ecos_communicator/src/parameter.dart';
 
 void main() {
   final types = [
