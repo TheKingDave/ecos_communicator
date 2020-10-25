@@ -2,12 +2,11 @@ import 'package:meta/meta.dart';
 
 class Parameter {
   final String name;
-  final String _value;
+  final String value;
   final ParameterType type;
 
   Parameter(
-      {@required this.name, String value, this.type = ParameterType.NATIVE})
-      : _value = value {
+      {@required this.name, this.value, this.type = ParameterType.NATIVE}) {
     if (type != ParameterType.NO_VALUE && value == null) {
       throw ArgumentError('If type is not NO_VALUE a value must be provided.');
     }
@@ -50,18 +49,18 @@ class Parameter {
     return Parameter(name: match.namedGroup('name'), value: value);
   }
 
-  String get value {
+  String get escapedValue {
     if (type == ParameterType.STRING) {
-      return '"${_value.replaceAll('"', '""')}"';
+      return '"${value.replaceAll('"', '""')}"';
     }
-    return _value;
+    return value;
   }
 
   String get str {
     if (type == ParameterType.NO_VALUE) {
       return name;
     }
-    return '$name[$value]';
+    return '$name[$escapedValue]';
   }
 
   @override
@@ -70,15 +69,15 @@ class Parameter {
       other is Parameter &&
           runtimeType == other.runtimeType &&
           name == other.name &&
-          _value == other._value &&
+          value == other.value &&
           type == other.type;
 
   @override
-  int get hashCode => name.hashCode ^ _value.hashCode ^ type.hashCode;
+  int get hashCode => name.hashCode ^ value.hashCode ^ type.hashCode;
 
   @override
   String toString() {
-    return 'Parameter{name: $name, _value: $_value, type: $type}';
+    return 'Parameter{name: $name, _value: $value, type: $type}';
   }
 }
 
