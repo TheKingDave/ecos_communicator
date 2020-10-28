@@ -2,7 +2,7 @@ A library to easily communicate with the [ECoS](http://www.esu.eu/en/products/di
 
 ## Example
 
-The example can be run with `dart ecos_communicator_example.dart <ip address> [<id>]`.
+The example can be run with `dart ecos_communicator_example.dart <ip address> [<id: 20000>]`.
 
 Will only work on turnouts with 2 states (normal turnouts)
 
