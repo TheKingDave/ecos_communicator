@@ -1,122 +1,106 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:ecos_communicator/src/eventHandler.dart';
 
-import 'event.dart';
-
-import 'parameter.dart';
 import 'package:meta/meta.dart';
 
-import 'tuple.dart';
 import 'command.dart';
-import 'responseTransformer.dart';
 import 'response.dart';
-import 'connectionHandler.dart';
+import 'responseTransformer.dart';
 
 class Connection {
+  /// The address (ip) of the ECoS
   final String address;
+
+  /// The port to connect to (default: 15471)
   final int port;
-  final ConnectionHandler _connectionHandler;
+
+  /// The interval between sending pings to the ECoS
+  final Duration pingInterval;
+
+  /// How long until the timeout is reached
+  final Duration timeout;
 
   Socket _socket;
   Timer _timer;
 
-  final List<Tuple<Command, Completer<Response>>> _commandList = [];
-  final StreamController _eventStreamController = StreamController<Event>();
-  final Map<int, EventHandler> _eventHandlers = {};
+  StreamController<Response> _responseController;
 
-  String stringTransform(Uint8List data) {
-    return String.fromCharCodes(data);
-  }
+  /// Stream of responses gotten from the ECoS
+  Stream<Response> get responses => _responseController.stream;
 
+  StreamController<Command> _commandController;
+
+  /// Sink to send commands to the ECoS
+  StreamSink<Command> get commands => _commandController.sink;
+
+  /// Creates a connection, the socket will only open if the [open] method is called
   Connection(
       {@required this.address,
-      @required this.port,
-      @required ConnectionHandler connectionHandler})
-      : _connectionHandler = connectionHandler;
+      this.port = 15471,
+      this.pingInterval = const Duration(seconds: 1),
+      this.timeout = const Duration(seconds: 2)}) {
+    _responseController = StreamController(onListen: open);
+    _commandController = StreamController();
+  }
 
-  void open() async {
-    _socket =
-        await Socket.connect(address, port, timeout: Duration(seconds: 5));
+  /// Opens the socket
+  ///
+  /// This method is automatically called when the [commands] stream is listened to
+  ///
+  /// If the socket is already opened it does nothing
+  void open() {
+    if (_socket != null) return;
+    Socket.connect(address, port).then(_onOpen);
+  }
 
-    _timer = Timer.periodic(
-        Duration(seconds: 1),
-        (timer) => sendCommand(Command(
-            type: 'get', id: 1, parameters: {Parameter.noValue('status')})));
+  void _onOpen(Socket socket) {
+    _socket = socket;
 
-    _socket
-        .map(stringTransform)
-        .transform(LineSplitter())
+    if (pingInterval != null) {
+      print('enable ping $pingInterval');
+      _timer =
+          Timer.periodic(pingInterval, (_) => _socket.write('test("#ping")\n'));
+    }
+
+    var stream = _socket
+        .map((data) => String.fromCharCodes(data))
+        .transform(LineSplitter());
+
+    if (timeout != null) {
+      print('enable timeout $timeout');
+      stream = stream.timeout(timeout, onTimeout: _onTimeout);
+    }
+
+    stream
+        .where((line) => line[0] != '#') // ignore comments
         .transform(ResponseTransformer())
-        .timeout(Duration(seconds: 2), onTimeout: onTimeout)
-        .listen(responseHandler,
-            onError: errorHandler,
-            onDone: () => _connectionHandler?.onDisconnect());
+        .pipe(_responseController);
 
-    _connectionHandler?.onConnect();
+    _commandController.stream.listen(_onCommand);
   }
 
-  void onTimeout(EventSink<Response> sink) {
+  void _onCommand(Command cmd) {
+    _send(cmd.str);
+  }
+
+  void _send(String str) {
+    print('SEND: $str');
+    _socket.write('${str}\n');
+  }
+
+  void _onTimeout(EventSink sink) {
     print('onTimeout');
-    _timer.cancel();
-    _socket.close();
     sink.close();
+    close();
   }
 
-  void responseHandler(Response response) {
-    if (response.type == 'EVENT') {
-      _eventStreamController.add(Event.fromResponse(response));
-      return;
-    }
-    final cmd = Command.fromString(response.extra);
-    final tuple = _commandList.firstWhere((tuple) => tuple.item0 == cmd);
-    _commandList.removeAt(_commandList.indexOf(tuple));
-    tuple.item1.complete(response);
-  }
-
-  void errorHandler(error, StackTrace trace) {
-    print('Error: $error');
-  }
-
-  Future<Response> sendCommand(Command cmd) async {
-    Completer<Response> completer;
-    completer = Completer();
-    _commandList.add(Tuple(cmd, completer));
-    _socket.write('${cmd.str}\n');
-    return completer.future;
-  }
-
-  void registerEventHandler(int id, EventHandler eventHandler) async {
-    if (_eventHandlers[id] != null) {
-      throw StateError('Event handler with id $id already registered');
-    }
-    try {
-      await sendCommand(Command(
-          type: 'request', id: id, parameters: {Parameter.noValue('view')}));
-      _eventHandlers[id] = eventHandler;
-    } catch(e) {
-      throw Exception('Command returned an error');
-    }
-  }
-
-  void unregisterEventHandler(int id) async {
-    if(_eventHandlers[id] == null) return;
-    try {
-      await sendCommand(Command(
-          type: 'release', id: id, parameters: {Parameter.noValue('view')}));
-      _eventHandlers[id] = null;
-    } catch(e) {
-      throw Exception('Command returned an error');
-    }
-  }
-
-  Stream<Event> get events {
-    return _eventStreamController.stream;
-  }
-
-  void close() {
-    return _socket.destroy();
+  /// Closes the socket
+  void close() async {
+    print('close');
+    _timer?.cancel();
+    await _socket.close();
+    _socket.destroy();
+    await _commandController.close();
   }
 }
