@@ -1,22 +1,26 @@
-A library for Dart developers.
+A library to easily communicate with the [ECoS](http://www.esu.eu/en/products/digital-control/ecos-50210-dcc-system/what-ecos-can-do/) command station.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+## Example
+
+The example can be run with `dart ecos_communicator_example.dart <ip address> [<id>]`.
+
+Will only work on turnouts with 2 states (normal turnouts)
+
+This will connect to the ECoS and present a cli interface.
+Updated on the turnout state will be printed in this way:
+`Switch: straight` or `Switch: curved`
+
+* s: Will switch the turnout
+* c: Will disconnect the listener on turnout updates
+* m: Will reconnect the listener on turnout updates
+* close: Will close the connection
 
 ## Usage
 
-A simple usage example:
-
-```dart
-import 'package:ecos_communicator/ecos_communicator.dart';
-
-main() {
-  var awesome = new Awesome();
-}
-```
+TODO
 
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: http://example.com/issues/replaceme
+[tracker]: https://github.com/TheKingDave/ecos_communicator/issues
