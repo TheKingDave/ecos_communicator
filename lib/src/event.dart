@@ -1,9 +1,9 @@
 import 'response.dart';
 import 'parameter.dart';
-import 'responseLine.dart';
 
 class Event {
   final int id;
+  // Subject to change?
   final Parameter parameter;
 
   Event({this.id, this.parameter});
@@ -11,7 +11,7 @@ class Event {
   factory Event.fromResponse(Response resp) {
     return Event(
       id: int.parse(resp.extra),
-      parameter: ResponseLine.fromString(resp.lines.first).parameter,
+      parameter: resp.lines.first.parameters.first,
     );
   }
 
