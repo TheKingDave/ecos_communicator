@@ -9,6 +9,34 @@ class Command {
 
   Command({@required this.type, @required this.id, this.parameters = const {}});
 
+  factory Command.get(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'get', id: id, parameters: parameters);
+
+  factory Command.set(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'set', id: id, parameters: parameters);
+
+  factory Command.create(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'create', id: id, parameters: parameters);
+
+  factory Command.delete(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'delete', id: id, parameters: parameters);
+
+  factory Command.request(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'request', id: id, parameters: parameters);
+
+  factory Command.release(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'release', id: id, parameters: parameters);
+
+  factory Command.link(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'link', id: id, parameters: parameters);
+
+  factory Command.unlink(int id, [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'unlink', id: id, parameters: parameters);
+
+  factory Command.queryObjects(int id,
+          [Set<Parameter> parameters = const {}]) =>
+      Command(type: 'queryObjects', id: id, parameters: parameters);
+
   String get str {
     var paramString = parameters.map((p) => p.str).join(',');
     paramString = paramString.isEmpty ? '' : ',$paramString';
