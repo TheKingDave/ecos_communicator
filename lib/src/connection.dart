@@ -58,7 +58,6 @@ class Connection {
     _socket = socket;
 
     if (pingInterval != null) {
-      print('enable ping $pingInterval');
       _timer =
           Timer.periodic(pingInterval, (_) => _socket.write('test("#ping")\n'));
     }
@@ -68,7 +67,6 @@ class Connection {
         .transform(LineSplitter());
 
     if (timeout != null) {
-      print('enable timeout $timeout');
       stream = stream.timeout(timeout, onTimeout: _onTimeout);
     }
 
@@ -85,19 +83,16 @@ class Connection {
   }
 
   void _send(String str) {
-    print('SEND: $str');
     _socket.write('${str}\n');
   }
 
   void _onTimeout(EventSink sink) {
-    print('onTimeout');
     sink.close();
     close();
   }
 
   /// Closes the socket
   void close() async {
-    print('close');
     _timer?.cancel();
     await _socket.close();
     _socket.destroy();
