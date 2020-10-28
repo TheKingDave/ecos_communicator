@@ -1,48 +1,80 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:ecos_communicator/ecos_communicator.dart';
 
-void main() {
-  Main();
+void main(List<String> args) {
+  if (args.isEmpty) {
+    print('At least one argument is needed: <address> [<switch id: 20000>]');
+    return;
+  }
+
+  final id = args.length < 2 ? 20000 : int.parse(args[1]);
+
+  Main(args[0], id);
 }
 
-class Main extends ConnectionHandler {
-  Connection _connection;
-  bool open = true;
+class Main {
+  final String address;
+  final int id;
+  ObjectConnection _con;
+  bool _state;
 
-  Main() {
-    _connection = Connection(
-        address: '192.168.0.26', port: 15471, connectionHandler: this);
-    _connection.events.listen((event) => print(event));
-
-    connect();
+  Main(this.address, this.id) {
+    main();
   }
 
-  void connect() async {
-    try {
-      await _connection.open();
-    } catch (e) {
-      print(e);
-    }
+  void main() async {
+    // Create connection
+    _con = ObjectConnection.raw(address: address);
+
+    // Get state of object [id]
+    final resp = await _con.send(Command.get(id, {Parameter.name('state')}));
+    _state = resp.lines.first.parameters.first.value == '1';
+
+    print('Switch: ${swStateStr(_state)}');
+
+    // Make subscription to events from object [id]
+    var sub = makeSub();
+
+    // cli code
+    stdin.transform(utf8.decoder).transform(LineSplitter()).listen((line) {
+      switch (line) {
+        case 's':
+          // Switch object 20000
+          _state = !_state;
+          print('Switch: ${swStateStr(_state)}');
+          _con.send(
+              Command.set(id, {Parameter.native('state', _state ? '1' : '0')}));
+          break;
+        case 'c':
+          // Cancel subscription to events from [id]
+          sub.cancel();
+          break;
+        case 'm':
+          // Re establish subscription to events from [id]
+          sub = makeSub();
+          break;
+        case 'close':
+          // Close connection
+          _con.close();
+          break;
+      }
+    });
   }
 
-  @override
-  void onConnect() async {
-    print('onConnect');
-
-    print(await _connection.sendCommand(Command(
-        type: 'request', id: 20000, parameters: {Parameter.noValue('view')})));
-
-    /*while (open) {
-      print(await _connection.sendCommand(Command(
-          type: 'get', id: 20000, parameters: {Parameter.noValue('name1')})));
-      await Future.delayed(Duration(seconds: 1));
-    }*/
-
-    //connection.close();
+  /// Create subscription to events from object 20000 (switch)
+  StreamSubscription makeSub() {
+    return _con.getEvents(id).listen((event) {
+      if (event.parameter.name == 'state') {
+        _state = event.parameter.value == '1';
+        print('Switch: ${swStateStr(_state)}');
+      }
+    });
   }
 
-  @override
-  void onDisconnect() {
-    print('onDisconnect');
-    open = false;
+  String swStateStr(bool state) {
+    return state ? 'curved' : 'straight';
   }
 }
