@@ -20,7 +20,7 @@ class Parameter {
     return Parameter(name: name, value: value, type: ParameterType.STRING);
   }
 
-  factory Parameter.noValue(String name) {
+  factory Parameter.name(String name) {
     return Parameter(name: name, type: ParameterType.NO_VALUE);
   }
 
@@ -77,7 +77,11 @@ class Parameter {
 
   @override
   String toString() {
-    return 'Parameter{name: $name, _value: $value, type: $type}';
+    final t = type.toString().substring(14);
+    if(type == ParameterType.NO_VALUE) {
+      return 'Parameter{name: $name, type: $t}';
+    }
+    return 'Parameter{name: $name, value: $value, type: $t}';
   }
 }
 

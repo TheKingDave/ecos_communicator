@@ -5,7 +5,7 @@ import 'package:ecos_communicator/src/parameter.dart';
 void main() {
   final cmds = [
     Command(type: 'get', id: 20000),
-    Command(type: 'get', id: 20000, parameters: {Parameter.noValue('state')}),
+    Command(type: 'get', id: 20000, parameters: {Parameter.name('state')}),
     Command(type: 'set', id: 20000, parameters: {
       Parameter.native('state', '1'),
       Parameter.string('name1', 'Weiche'),
