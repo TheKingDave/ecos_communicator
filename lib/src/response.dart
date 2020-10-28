@@ -1,9 +1,11 @@
+import 'responseLine.dart';
+
 class Response {
   final String type;
   final String extra;
   final int status;
   final String statusStr;
-  final List<String> lines;
+  final List<ResponseLine> lines;
 
   Response({this.type, this.extra, this.status, this.statusStr, this.lines});
 
@@ -38,7 +40,7 @@ class Response {
         extra: extra,
         status: status,
         statusStr: statusStr,
-        lines: lines);
+        lines: lines.map((l) => ResponseLine.fromString(l)).toList());
   }
 
   @override
