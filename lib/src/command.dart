@@ -70,10 +70,23 @@ class Command {
 
     var lastSplit = 0;
     var quoteCount = 0;
+    var inBrackets = false;
+
     for (var i = 0; i < str.length; i++) {
       final char = str[i];
-      if (char == '"') quoteCount++;
-      if (char == ',' && quoteCount % 2 == 0) {
+      if (char == '"') {
+        quoteCount++;
+        continue;
+      }
+
+      if (quoteCount % 2 == 0) continue;
+
+      if (char == '[') inBrackets = true;
+      if (char == ']') inBrackets = false;
+
+      if (inBrackets) continue;
+
+      if (char == ',') {
         split.add(Parameter.fromString(str.substring(lastSplit, i)));
         lastSplit = i + 1;
       }
