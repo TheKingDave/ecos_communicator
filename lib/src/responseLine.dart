@@ -2,19 +2,19 @@ import 'parameter.dart';
 
 class ResponseLine {
   final int id;
-  final Parameter parameter;
+  final List<Parameter> parameters;
 
-  ResponseLine({this.id, this.parameter});
+  ResponseLine({this.id, this.parameters});
 
   factory ResponseLine.fromString(String str) {
-    final idx = str.indexOf(' ');
-    final id = int.parse(str.substring(0, idx));
-    final parameter = Parameter.fromString(str.substring(idx+1));
-    return ResponseLine(id: id, parameter: parameter);
+    final split = str.split(' ');
+    final id = int.parse(split.removeAt(0));
+    final parameters = split.map((e) => Parameter.fromString(e)).toList();
+    return ResponseLine(id: id, parameters: parameters);
   }
 
   @override
   String toString() {
-    return 'ResponseLine{id: $id, parameter: $parameter}';
+    return 'ResponseLine{id: $id, parameter: $parameters}';
   }
 }
