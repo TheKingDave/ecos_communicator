@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:ecos_communicator/ecos_communicator.dart';
 
 void main(List<String> args) {
+  // Check cli arguments
   if (args.isEmpty) {
     print('At least one argument is needed: <address> [<switch id: 20000>]');
     return;
@@ -18,9 +19,9 @@ void main(List<String> args) {
 class Main {
   final String address;
   final int id;
-  ObjectConnection _con;
+  ObjectConnection _connection;
   bool _state;
-  StreamSubscription _stdinSub;
+  StreamSubscription _stdinSubscription;
 
   Main(this.address, this.id) {
     main();
@@ -28,26 +29,27 @@ class Main {
 
   void main() async {
     // Create connection
-    _con = ObjectConnection.raw(address: address);
+    _connection = ObjectConnection.raw(address: address);
 
     // Get state of object [id]
-    final resp = await _con.send(Command.get(id, {Parameter.name('state')}));
+    final resp =
+        await _connection.send(Command.get(id, {Parameter.name('state')}));
     _state = resp.lines.first.parameters.first.value == '1';
 
     print('Switch: $swStr');
 
     // Make subscription to events from object [id]
-    var sub = makeSub();
+    var sub = subscribeToEvents();
 
     // cli code
-    _stdinSub =
+    _stdinSubscription =
         stdin.transform(utf8.decoder).transform(LineSplitter()).listen((line) {
       switch (line) {
         case 's':
           // Switch object 20000
           _state = !_state;
           print('Switch: $swStr');
-          _con.send(
+          _connection.send(
               Command.set(id, {Parameter.native('state', _state ? '1' : '0')}));
           break;
         case 'c':
@@ -56,12 +58,12 @@ class Main {
           break;
         case 'm':
           // Re establish subscription to events from [id]
-          sub = makeSub();
+          sub = subscribeToEvents();
           break;
         case 'close':
           // Close connection
-          _con.close();
-          _stdinSub.cancel();
+          _connection.close();
+          _stdinSubscription.cancel();
           print('End');
           break;
       }
@@ -69,8 +71,8 @@ class Main {
   }
 
   /// Create subscription to events from object 20000 (switch)
-  StreamSubscription makeSub() {
-    return _con.getEvents(id).listen((event) {
+  StreamSubscription subscribeToEvents() {
+    return _connection.getEvents(id).listen((event) {
       if (event.parameter.name == 'state') {
         _state = event.parameter.value == '1';
         print('Switch: $swStr');
