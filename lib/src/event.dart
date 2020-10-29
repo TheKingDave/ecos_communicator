@@ -1,23 +1,26 @@
 import 'reply.dart';
 import 'argument.dart';
 
+/// Event sent from the ECoS
 class Event {
+  /// id of the corresponding object
   final int id;
+  /// The supplied argument
   // Subject to change (to list)?
-  final Argument parameter;
+  final Argument argument;
 
-  Event({this.id, this.parameter});
+  Event({this.id, this.argument});
 
   factory Event.fromResponse(Reply resp) {
     return Event(
       id: int.parse(resp.extra),
-      parameter: resp.lines.first.parameters.first,
+      argument: resp.entries.first.parameters.first,
     );
   }
 
   @override
   String toString() {
-    return 'Event{id: $id, parameter: $parameter}';
+    return 'Event{id: $id, parameter: $argument}';
   }
 
   @override

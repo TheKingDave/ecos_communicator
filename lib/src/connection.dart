@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 import 'request.dart';
 import 'reply.dart';
-import 'responseTransformer.dart';
+import 'replyTransformer.dart';
 
 class Connection {
   /// The address (ip) of the ECoS
@@ -73,7 +73,7 @@ class Connection {
 
     stream
         .where((line) => line[0] != '#') // ignore comments
-        .transform(ResponseTransformer())
+        .transform(ReplyTransformer())
         .pipe(_responseController);
 
     _commandController.stream.listen(_onCommand);
@@ -93,7 +93,7 @@ class Connection {
     close();
   }
 
-  /// Closes the socket
+  /// Closes the socket and all streams
   void close() async {
     if(_isClosed) return;
     _isClosed = true;

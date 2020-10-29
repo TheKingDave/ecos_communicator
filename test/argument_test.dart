@@ -3,9 +3,9 @@ import 'package:ecos_communicator/src/argument.dart';
 
 void main() {
   final types = [
-    ParameterType.NATIVE,
-    ParameterType.STRING,
-    ParameterType.NO_VALUE,
+    ArgumentType.NATIVE,
+    ArgumentType.STRING,
+    ArgumentType.NO_VALUE,
   ];
 
   final typeThrow = [throwsArgumentError, throwsArgumentError, returnsNormally];
@@ -18,18 +18,18 @@ void main() {
 
   test('equals ok', () {
     final param1 =
-        Argument(name: 'test', value: 'val', type: ParameterType.STRING);
+        Argument(name: 'test', value: 'val', type: ArgumentType.STRING);
     final param2 =
-        Argument(name: 'test', value: 'val', type: ParameterType.STRING);
+        Argument(name: 'test', value: 'val', type: ArgumentType.STRING);
 
     expect(param1 == param2, isTrue);
   });
 
   test('equals wrong', () {
     final param1 =
-        Argument(name: 'test', value: 'val', type: ParameterType.STRING);
+        Argument(name: 'test', value: 'val', type: ArgumentType.STRING);
     final param2 =
-        Argument(name: 'test', value: 'wrong', type: ParameterType.STRING);
+        Argument(name: 'test', value: 'wrong', type: ArgumentType.STRING);
 
     expect(param1 == param2, isFalse);
   });
@@ -38,13 +38,13 @@ void main() {
     ['mode[SWITCH]', Argument(name: 'mode', value: 'SWITCH')],
     [
       'name1["Weiche"]',
-      Argument(name: 'name1', value: 'Weiche', type: ParameterType.STRING)
+      Argument(name: 'name1', value: 'Weiche', type: ArgumentType.STRING)
     ],
     ['position[ok]', Argument(name: 'position', value: 'ok')],
-    ['name1', Argument(name: 'name1', type: ParameterType.NO_VALUE)],
+    ['name1', Argument(name: 'name1', type: ArgumentType.NO_VALUE)],
     [
       r'name1["Test""\[]"]',
-      Argument(name: 'name1', value: r'Test"\[]', type: ParameterType.STRING)
+      Argument(name: 'name1', value: r'Test"\[]', type: ArgumentType.STRING)
     ]
   ];
 

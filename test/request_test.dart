@@ -4,9 +4,9 @@ import 'package:ecos_communicator/src/argument.dart';
 
 void main() {
   final cmds = [
-    Request(type: 'get', id: 20000),
-    Request(type: 'get', id: 20000, parameters: {Argument.name('state')}),
-    Request(type: 'set', id: 20000, parameters: {
+    Request(command: 'get', id: 20000),
+    Request(command: 'get', id: 20000, arguments: {Argument.name('state')}),
+    Request(command: 'set', id: 20000, arguments: {
       Argument.native('state', '1'),
       Argument.string('name1', 'Weiche'),
       Argument.string('name2', 'Test'),

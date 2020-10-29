@@ -34,7 +34,7 @@ class Main {
     // Get state of object [id]
     final resp =
         await _connection.send(Request.get(id, {Argument.name('state')}));
-    _state = resp.lines.first.parameters.first.value == '1';
+    _state = resp.entries.first.parameters.first.value == '1';
 
     print('Switch: $swStr');
 
@@ -73,8 +73,8 @@ class Main {
   /// Create subscription to events from object 20000 (switch)
   StreamSubscription subscribeToEvents() {
     return _connection.getEvents(id).listen((event) {
-      if (event.parameter.name == 'state') {
-        _state = event.parameter.value == '1';
+      if (event.argument.name == 'state') {
+        _state = event.argument.value == '1';
         print('Switch: $swStr');
       }
     });

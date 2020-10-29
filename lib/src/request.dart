@@ -2,50 +2,55 @@ import 'package:collection/src/equality.dart';
 import 'package:meta/meta.dart';
 import 'argument.dart';
 
+/// ECoS request
 class Request {
-  final String type;
+  /// The command of the request (cmd)
+  final String command;
+  /// The id of the object
   final int id;
-  final Set<Argument> parameters;
+  /// The argument list
+  final Set<Argument> arguments;
 
-  Request({@required this.type, @required this.id, this.parameters = const {}});
+  Request({@required this.command, @required this.id, this.arguments = const {}});
 
+  /// Construct a get request
   factory Request.get(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'get', id: id, parameters: parameters);
+      Request(command: 'get', id: id, arguments: parameters);
 
+  /// Construct a set request
   factory Request.set(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'set', id: id, parameters: parameters);
+      Request(command: 'set', id: id, arguments: parameters);
 
+  /// Construct a create request
   factory Request.create(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'create', id: id, parameters: parameters);
+      Request(command: 'create', id: id, arguments: parameters);
 
+  /// Construct a delete request
   factory Request.delete(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'delete', id: id, parameters: parameters);
+      Request(command: 'delete', id: id, arguments: parameters);
 
+  /// Construct a request request
   factory Request.request(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'request', id: id, parameters: parameters);
+      Request(command: 'request', id: id, arguments: parameters);
 
+  /// Construct a release request
   factory Request.release(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'release', id: id, parameters: parameters);
+      Request(command: 'release', id: id, arguments: parameters);
 
+  /// Construct a link request
   factory Request.link(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'link', id: id, parameters: parameters);
+      Request(command: 'link', id: id, arguments: parameters);
 
+  /// Construct a unlink request
   factory Request.unlink(int id, [Set<Argument> parameters = const {}]) =>
-      Request(type: 'unlink', id: id, parameters: parameters);
+      Request(command: 'unlink', id: id, arguments: parameters);
 
+  /// Construct a queryObjects request
   factory Request.queryObjects(int id,
           [Set<Argument> parameters = const {}]) =>
-      Request(type: 'queryObjects', id: id, parameters: parameters);
+      Request(command: 'queryObjects', id: id, arguments: parameters);
 
-  String get str {
-    var paramString = parameters.map((p) => p.str).join(',');
-    paramString = paramString.isEmpty ? '' : ',$paramString';
-    return '$type($id$paramString)';
-  }
-
-  static final _cmdRegex =
-      RegExp(r'^(?<type>\w+)\((?<id>\d+)([, ]+(?<params>.*))?\)$');
-
+  /// Parse request from string
   factory Request.fromString(String str) {
     final match = _cmdRegex.firstMatch(str.trim());
     if (match == null) {
@@ -57,12 +62,22 @@ class Request {
     final params = match.namedGroup('params');
 
     if (params == null) {
-      return Request(type: type, id: id);
+      return Request(command: type, id: id);
     }
 
     return Request(
-        type: type, id: id, parameters: _parameterListFromString(params));
+        command: type, id: id, arguments: _parameterListFromString(params));
   }
+
+  /// The ECoS string representation
+  String get str {
+    var paramString = arguments.map((p) => p.str).join(',');
+    paramString = paramString.isEmpty ? '' : ',$paramString';
+    return '$command($id$paramString)';
+  }
+
+  static final _cmdRegex =
+      RegExp(r'^(?<type>\w+)\((?<id>\d+)([, ]+(?<params>.*))?\)$');
 
   static Set<Argument> _parameterListFromString(String str) {
     if (str == null || str.isEmpty) return {};
@@ -97,7 +112,7 @@ class Request {
 
   @override
   String toString() {
-    return 'Command{type: $type, id: $id, parameters: $parameters}';
+    return 'Command{type: $command, id: $id, parameters: $arguments}';
   }
 
   @override
@@ -105,10 +120,10 @@ class Request {
       identical(this, other) ||
       other is Request &&
           runtimeType == other.runtimeType &&
-          type == other.type &&
+          command == other.command &&
           id == other.id &&
-          SetEquality().equals(parameters, other.parameters);
+          SetEquality().equals(arguments, other.arguments);
 
   @override
-  int get hashCode => type.hashCode ^ id.hashCode ^ parameters.hashCode;
+  int get hashCode => command.hashCode ^ id.hashCode ^ arguments.hashCode;
 }

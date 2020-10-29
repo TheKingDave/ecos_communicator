@@ -2,12 +2,16 @@ import 'package:collection/collection.dart';
 
 import 'argument.dart';
 
+/// A ECoS ListEntry
 class ListEntry {
+  /// The object id
   final int id;
+  /// The argument list ([Argument]*)
   final List<Argument> parameters;
 
   ListEntry({this.id, this.parameters});
 
+  /// Constructs a ListEntry from string
   factory ListEntry.fromString(String str) {
     final split = str.split(' ');
     final id = int.parse(split.removeAt(0));

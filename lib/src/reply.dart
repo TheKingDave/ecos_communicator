@@ -1,19 +1,26 @@
 import 'package:collection/collection.dart';
 import 'listEntry.dart';
 
+/// Reply sent from the ECoS
 class Reply {
+  /// The type of the reply (REPLY, EVENT)
   final String type;
+  /// The command or id of the Reply
   final String extra;
+  /// The status number (errno)
   final int status;
-  final String statusStr;
-  final List<ListEntry> lines;
+  /// The status message (errmsg)
+  final String statusMsg;
+  /// The list entries ([ListEntry]*)
+  final List<ListEntry> entries;
 
-  Reply({this.type, this.extra, this.status, this.statusStr, this.lines});
+  Reply({this.type, this.extra, this.status, this.statusMsg, this.entries});
 
   static final _headerRegex = RegExp(r'^<(?<type>\w+) (?<extra>.*)>$');
   static final _footerRegex =
       RegExp(r'^<END (?<status>\d+) \((?<statusStr>.*)\)>$');
 
+  /// Parses a replay from string
   factory Reply.fromString(String str) {
     final lines = str.trim().split('\n');
 
@@ -40,13 +47,13 @@ class Reply {
         type: type,
         extra: extra,
         status: status,
-        statusStr: statusStr,
-        lines: lines.map((l) => ListEntry.fromString(l)).toList());
+        statusMsg: statusStr,
+        entries: lines.map((l) => ListEntry.fromString(l)).toList());
   }
 
   @override
   String toString() {
-    return 'Response{type: $type, extra: $extra, status: $status, statusStr: $statusStr, lines: $lines}';
+    return 'Reply{type: $type, extra: $extra, status: $status, statusMsg: $statusMsg, entries: $entries}';
   }
 
   @override
@@ -57,14 +64,14 @@ class Reply {
           type == other.type &&
           extra == other.extra &&
           status == other.status &&
-          statusStr == other.statusStr &&
-          ListEquality().equals(lines, other.lines);
+          statusMsg == other.statusMsg &&
+          ListEquality().equals(entries, other.entries);
 
   @override
   int get hashCode =>
       type.hashCode ^
       extra.hashCode ^
       status.hashCode ^
-      statusStr.hashCode ^
-      lines.hashCode;
+      statusMsg.hashCode ^
+      entries.hashCode;
 }

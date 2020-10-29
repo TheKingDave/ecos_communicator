@@ -1,31 +1,39 @@
 import 'package:meta/meta.dart';
 
+/// An ECoS Argument
 class Argument {
+  /// The name of the argument (option)
   final String name;
+  /// The value of the argument (parameter)
   final String value;
-  final ParameterType type;
+  /// The type of the parameter
+  final ArgumentType type;
 
   Argument(
-      {@required this.name, this.value, this.type = ParameterType.NATIVE}) {
-    if (type != ParameterType.NO_VALUE && value == null) {
+      {@required this.name, this.value, this.type = ArgumentType.NATIVE}) {
+    if (type != ArgumentType.NO_VALUE && value == null) {
       throw ArgumentError('If type is not NO_VALUE a value must be provided.');
     }
   }
 
+  /// Construct an argument of the type NATIVE
   factory Argument.native(String name, String value) {
-    return Argument(name: name, value: value, type: ParameterType.NATIVE);
+    return Argument(name: name, value: value, type: ArgumentType.NATIVE);
   }
 
+  /// Construct an argument of the type STRING
   factory Argument.string(String name, String value) {
-    return Argument(name: name, value: value, type: ParameterType.STRING);
+    return Argument(name: name, value: value, type: ArgumentType.STRING);
   }
 
+  /// Construct an argument of the type NO_VALUE
   factory Argument.name(String name) {
-    return Argument(name: name, type: ParameterType.NO_VALUE);
+    return Argument(name: name, type: ArgumentType.NO_VALUE);
   }
 
   static final _paramRegex = RegExp(r'^(?<name>[^\[]+)(\[(?<value>.+)\])?$');
 
+  /// Parse argument from string
   factory Argument.fromString(String str) {
     final match = _paramRegex.firstMatch(str.trim());
     if (match == null) {
@@ -36,28 +44,30 @@ class Argument {
     final value = match.namedGroup('value');
 
     if (value == null) {
-      return Argument(name: name, type: ParameterType.NO_VALUE);
+      return Argument(name: name, type: ArgumentType.NO_VALUE);
     }
 
     if (value[0] == '"' && value[value.length - 1] == '"') {
       return Argument(
           name: name,
           value: value.substring(1, value.length - 1).replaceAll('""', '"'),
-          type: ParameterType.STRING);
+          type: ArgumentType.STRING);
     }
 
     return Argument(name: match.namedGroup('name'), value: value);
   }
 
+  /// If the [type] is STRING the value is properly escaped
   String get escapedValue {
-    if (type == ParameterType.STRING) {
+    if (type == ArgumentType.STRING) {
       return '"${value.replaceAll('"', '""')}"';
     }
     return value;
   }
 
+  /// Returns the ECoS string representation of the an Argument
   String get str {
-    if (type == ParameterType.NO_VALUE) {
+    if (type == ArgumentType.NO_VALUE) {
       return name;
     }
     return '$name[$escapedValue]';
@@ -66,7 +76,7 @@ class Argument {
   @override
   String toString() {
     final t = type.toString().substring(14);
-    if(type == ParameterType.NO_VALUE) {
+    if(type == ArgumentType.NO_VALUE) {
       return 'Parameter{name: $name, type: $t}';
     }
     return 'Parameter{name: $name, value: $value, type: $t}';
@@ -85,4 +95,5 @@ class Argument {
   int get hashCode => name.hashCode ^ value.hashCode ^ type.hashCode;
 }
 
-enum ParameterType { NATIVE, STRING, NO_VALUE }
+/// Type enum for Arguments
+enum ArgumentType { NATIVE, STRING, NO_VALUE }

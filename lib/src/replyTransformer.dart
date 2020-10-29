@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'reply.dart';
 
-class ResponseTransformer implements StreamTransformer<String, Reply> {
+/// Stream transformer to create reply's from Strings
+class ReplyTransformer implements StreamTransformer<String, Reply> {
   StreamController _controller;
   StreamSubscription _subscription;
   bool cancelOnError;
 
   Stream<String> _stream;
 
-  ResponseTransformer({bool sync = false, this.cancelOnError}) {
+  ReplyTransformer({bool sync = false, this.cancelOnError}) {
     _controller = StreamController<Reply>(
         onListen: _onListen,
         onCancel: _onCancel,
@@ -21,7 +22,7 @@ class ResponseTransformer implements StreamTransformer<String, Reply> {
         });
   }
 
-  ResponseTransformer.broadcast({bool sync = false, this.cancelOnError}) {
+  ReplyTransformer.broadcast({bool sync = false, this.cancelOnError}) {
     _controller = StreamController.broadcast(
         onListen: _onListen, onCancel: _onCancel, sync: sync);
   }
