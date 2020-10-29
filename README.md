@@ -1,4 +1,4 @@
-A library to easily communicate with the [ECoS](http://www.esu.eu/en/products/digital-control/ecos-50210-dcc-system/what-ecos-can-do/) command station.
+A library to easily communicate with the [ECoS](https://www.esu.eu/en/products/digital-control/ecos-50210-dcc-system/what-ecos-can-do/) command station.
 
 ## Example
 
