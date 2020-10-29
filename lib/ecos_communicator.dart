@@ -1,6 +1,6 @@
-/// Support for doing something awesome.
+/// This library supports the easy communication with the ECoS control station
 ///
-/// More dartdocs go here.
+/// Example... or something
 library ecos_communicator;
 
 export 'src/argument.dart';

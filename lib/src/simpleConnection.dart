@@ -97,8 +97,8 @@ class SimpleConnection {
     _commandController.stream.listen(_onCommand);
   }
 
-  void _onCommand(Request cmd) {
-    _send(cmd.str);
+  void _onCommand(Request request) {
+    _send(request.str);
   }
 
   void _send(String str) {

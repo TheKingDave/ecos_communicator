@@ -15,10 +15,10 @@ class Event {
   Event({this.id, this.argument});
 
   /// Parses an [Event] from a [Reply]
-  factory Event.fromResponse(Reply resp) {
+  factory Event.fromResponse(Reply reply) {
     return Event(
-      id: int.parse(resp.extra),
-      argument: resp.entries.first.parameters.first,
+      id: int.parse(reply.extra),
+      argument: reply.entries.first.parameters.first,
     );
   }
 

@@ -15,41 +15,41 @@ class Request {
   Request({@required this.command, @required this.id, this.arguments = const {}});
 
   /// Construct a get request
-  factory Request.get(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'get', id: id, arguments: parameters);
+  factory Request.get(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'get', id: id, arguments: arguments);
 
   /// Construct a set request
-  factory Request.set(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'set', id: id, arguments: parameters);
+  factory Request.set(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'set', id: id, arguments: arguments);
 
   /// Construct a create request
-  factory Request.create(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'create', id: id, arguments: parameters);
+  factory Request.create(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'create', id: id, arguments: arguments);
 
   /// Construct a delete request
-  factory Request.delete(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'delete', id: id, arguments: parameters);
+  factory Request.delete(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'delete', id: id, arguments: arguments);
 
   /// Construct a request request
-  factory Request.request(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'request', id: id, arguments: parameters);
+  factory Request.request(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'request', id: id, arguments: arguments);
 
   /// Construct a release request
-  factory Request.release(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'release', id: id, arguments: parameters);
+  factory Request.release(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'release', id: id, arguments: arguments);
 
   /// Construct a link request
-  factory Request.link(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'link', id: id, arguments: parameters);
+  factory Request.link(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'link', id: id, arguments: arguments);
 
   /// Construct a unlink request
-  factory Request.unlink(int id, [Set<Argument> parameters = const {}]) =>
-      Request(command: 'unlink', id: id, arguments: parameters);
+  factory Request.unlink(int id, [Set<Argument> arguments = const {}]) =>
+      Request(command: 'unlink', id: id, arguments: arguments);
 
   /// Construct a queryObjects request
   factory Request.queryObjects(int id,
-          [Set<Argument> parameters = const {}]) =>
-      Request(command: 'queryObjects', id: id, arguments: parameters);
+          [Set<Argument> arguments = const {}]) =>
+      Request(command: 'queryObjects', id: id, arguments: arguments);
 
   /// Parse request from string
   factory Request.fromString(String str) {
@@ -113,7 +113,7 @@ class Request {
 
   @override
   String toString() {
-    return 'Command{type: $command, id: $id, parameters: $arguments}';
+    return 'Command{type: $command, id: $id, arguments: $arguments}';
   }
 
   @override

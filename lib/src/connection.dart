@@ -37,11 +37,11 @@ class Connection {
   }
 
   /// Sends a request to the ECoS and returns the [Reply] in a [Future]
-  Future<Reply> send(Request cmd) async {
+  Future<Reply> send(Request request) async {
     Completer<Reply> completer;
     completer = Completer();
     _commandQueue.add(completer);
-    _connection.commands.add(cmd);
+    _connection.commands.add(request);
     return completer.future;
   }
 
@@ -92,7 +92,6 @@ class Connection {
 
   /// Closes all event [Stream]s and closes the [BasicConnection]
   void close() async {
-    // Close all event streams
     _events.forEach((key, value) => value.close());
     await _connection.close();
   }

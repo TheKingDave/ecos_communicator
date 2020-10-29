@@ -42,15 +42,11 @@ class ReplyTransformer implements StreamTransformer<String, Reply> {
   String _rawResponse = '';
 
   void _onData(String data) {
-    _appendData(data);
+    _rawResponse += '\n$data';
     if (data.startsWith('<END')) {
       _controller.add(Reply.fromString(_rawResponse));
       _rawResponse = '';
     }
-  }
-
-  void _appendData(String data) {
-    _rawResponse += '\n$data';
   }
 
   @override
