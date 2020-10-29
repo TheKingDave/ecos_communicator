@@ -34,7 +34,7 @@ class Main {
     final resp = await _con.send(Command.get(id, {Parameter.name('state')}));
     _state = resp.lines.first.parameters.first.value == '1';
 
-    print('Switch: ${swStateStr(_state)}');
+    print('Switch: $swStr');
 
     // Make subscription to events from object [id]
     var sub = makeSub();
@@ -46,7 +46,7 @@ class Main {
         case 's':
           // Switch object 20000
           _state = !_state;
-          print('Switch: ${swStateStr(_state)}');
+          print('Switch: $swStr');
           _con.send(
               Command.set(id, {Parameter.native('state', _state ? '1' : '0')}));
           break;
@@ -73,12 +73,12 @@ class Main {
     return _con.getEvents(id).listen((event) {
       if (event.parameter.name == 'state') {
         _state = event.parameter.value == '1';
-        print('Switch: ${swStateStr(_state)}');
+        print('Switch: $swStr');
       }
     });
   }
 
-  String swStateStr(bool state) {
-    return state ? 'curved' : 'straight';
+  String get swStr {
+    return _state ? 'curved' : 'straight';
   }
 }
