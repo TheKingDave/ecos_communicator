@@ -37,7 +37,6 @@ class ObjectConnection {
     final controller = StreamController<Event>.broadcast(
         onListen: () => send(Command.request(id, {Parameter.name('view')})),
         onCancel: () {
-          print('onCancel $id');
           send(Command.release(id, {Parameter.name('view')}));
           _events.remove(id);
         });
@@ -71,6 +70,8 @@ class ObjectConnection {
   }
 
   void close() async {
-    _connection.close();
+    // Close all event streams
+    _events.forEach((key, value) => value.close());
+    await _connection.close();
   }
 }
