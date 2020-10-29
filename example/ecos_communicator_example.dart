@@ -19,7 +19,7 @@ void main(List<String> args) {
 class Main {
   final String address;
   final int id;
-  ObjectConnection _connection;
+  Connection _connection;
   bool _state;
   StreamSubscription _stdinSubscription;
 
@@ -29,7 +29,7 @@ class Main {
 
   void main() async {
     // Create connection
-    _connection = ObjectConnection.raw(address: address);
+    _connection = Connection.raw(address: address);
 
     // Get state of object [id]
     final resp =

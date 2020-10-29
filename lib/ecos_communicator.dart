@@ -7,6 +7,6 @@ export 'src/argument.dart';
 export 'src/request.dart';
 export 'src/reply.dart';
 export 'src/listEntry.dart';
+export 'src/simpleConnection.dart';
 export 'src/connection.dart';
-export 'src/objectConnection.dart';
 export 'src/event.dart';

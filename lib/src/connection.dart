@@ -1,123 +1,99 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'dart:collection';
 
+import 'event.dart';
 import 'package:meta/meta.dart';
 
 import 'request.dart';
+import 'simpleConnection.dart';
+import 'argument.dart';
 import 'reply.dart';
-import 'replyTransformer.dart';
 
-/// A basic connection to the ECoS with type parsing
+/// A connection to a ECoS with more sophisticated control
 ///
-/// This class will connect to the supplied [address] and [port].
-///
-/// This connection will be established when the [responses] stream gets
-/// listened to or the [open()] method is called.
-///
-/// The connection supports the features ping and timeout. These features can be
-/// independently turned on or off.
-///
-/// [pingInterval] sets the time time interval where a ping is sent to the ECoS
-/// this is done by using the command `test("#ping")` which the ECoS will answer
-/// to with `#ping`.
-///
-/// [timeout] sets the time until the connection will be closed if no message is
-/// received within this time.
+/// This class supports the direct answer of Requests and splits the Events from
+/// the rest of the Reply stream so they can be listened to as a stream.
 class Connection {
-  /// The address (ip) of the ECoS
-  final String address;
+  final SimpleConnection _connection;
+  final Queue<Completer<Reply>> _commandQueue = Queue();
+  final Map<int, StreamController<Event>> _events = {};
 
-  /// The port to connect to (default: 15471)
-  final int port;
-
-  /// The interval between sending pings to the ECoS
-  final Duration pingInterval;
-
-  /// How long until the timeout is reached
-  final Duration timeout;
-
-  Socket _socket;
-  Timer _timer;
-  bool _isClosed = false;
-
-  StreamController<Reply> _responseController;
-
-  /// Stream of responses gotten from the ECoS
-  Stream<Reply> get responses => _responseController.stream;
-
-  StreamController<Request> _commandController;
-
-  /// Sink to send commands to the ECoS
-  StreamSink<Request> get commands => _commandController.sink;
-
-  /// Creates a connection, the socket will only be open if the [open()] method
-  /// is called
-  Connection(
-      {@required this.address,
-      this.port = 15471,
-      this.pingInterval = const Duration(seconds: 1),
-      this.timeout = const Duration(seconds: 2)}) {
-    _responseController = StreamController(onListen: open);
-    _commandController = StreamController();
+  /// Creates a connection with a supplied [SimpleConnection]
+  Connection(this._connection) {
+    _connection.responses.listen(_responseHandler);
   }
 
-  /// Opens the socket
+  /// Creates a connection which internally creates a [SimpleConnection]
+  factory Connection.raw(
+      {@required address,
+      port = 15471,
+      pingInterval = const Duration(seconds: 1),
+      timeout = const Duration(seconds: 2)}) {
+    return Connection(SimpleConnection(
+        address: address,
+        port: port,
+        pingInterval: pingInterval,
+        timeout: timeout));
+  }
+
+  /// Sends a request to the ECoS and returns the [Reply] in a [Future]
+  Future<Reply> send(Request cmd) async {
+    Completer<Reply> completer;
+    completer = Completer();
+    _commandQueue.add(completer);
+    _connection.commands.add(cmd);
+    return completer.future;
+  }
+
+  /// Subscribes to the [Event]s of an object with the specified [id]
   ///
-  /// This method is automatically called when the [commands] stream is listened
-  /// to
-  ///
-  /// If the socket is already opened it does nothing
-  void open() {
-    if (_socket != null) return;
-    Socket.connect(address, port).then(_onOpen);
-  }
-
-  void _onOpen(Socket socket) {
-    _socket = socket;
-
-    if (pingInterval != null) {
-      _timer =
-          Timer.periodic(pingInterval, (_) => _send('test("#ping")'));
+  /// This will return a broadcast [Stream] of [Event]s. There is always only
+  /// one [Stream] per id. The view on the object will only be requested if the
+  /// [Stream] is listened to. When the [Stream] gets canceled the view is
+  /// released.
+  Stream<Event> getEvents(int id) {
+    if (_events.containsKey(id)) {
+      return _events[id].stream;
     }
+    final controller = StreamController<Event>.broadcast(
+        onListen: () => send(Request.request(id, {Argument.name('view')})),
+        onCancel: () {
+          send(Request.release(id, {Argument.name('view')}));
+          _events.remove(id);
+        });
+    _events[id] = controller;
+    return controller.stream;
+  }
 
-    var stream = _socket
-        .map((data) => String.fromCharCodes(data))
-        .transform(LineSplitter());
-
-    if (timeout != null) {
-      stream = stream.timeout(timeout, onTimeout: _onTimeout);
+  void _responseHandler(Reply response) {
+    switch (response.type) {
+      case 'REPLY':
+        _replyHandler(response);
+        break;
+      case 'EVENT':
+        _eventHandler(Event.fromResponse(response));
+        break;
+      default:
+        print('ERROR: should never happen');
     }
-
-    stream
-        .where((line) => line[0] != '#') // ignore comments
-        .transform(ReplyTransformer())
-        .pipe(_responseController);
-
-    _commandController.stream.listen(_onCommand);
   }
 
-  void _onCommand(Request cmd) {
-    _send(cmd.str);
+  void _replyHandler(Reply response) {
+    _commandQueue.removeFirst().complete(response);
   }
 
-  void _send(String str) {
-    if(_isClosed) return;
-    _socket.write('${str}\n');
+  void _eventHandler(Event event) {
+    final id = event.id;
+    if (!_events.containsKey(id)) {
+      return;
+    }
+    _events[id].add(event);
   }
 
-  void _onTimeout(EventSink sink) {
-    sink.close();
-    close();
-  }
-
-  /// Closes the socket and all streams
+  /// Closes all event [Stream]s and closes the [BasicConnection]
   void close() async {
-    if(_isClosed) return;
-    _isClosed = true;
-    _timer?.cancel();
-    await _socket.close();
-    _socket.destroy();
-    await _commandController.close();
+    // Close all event streams
+    _events.forEach((key, value) => value.close());
+    await _connection.close();
   }
 }
