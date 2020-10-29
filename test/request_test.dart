@@ -10,14 +10,14 @@ void main() {
       Argument.native('state', '1'),
       Argument.string('name1', 'Weiche'),
       Argument.string('name2', 'Test'),
-      Argument.string('name3', r'"[]\'),
+      Argument.string('name3', r'"[,]\'),
     })
   ];
 
   final strs = [
     r'get(20000)',
     r'get(20000,state)',
-    r'set(20000,state[1],name1["Weiche"],name2["Test"],name3["""[]\"])',
+    r'set(20000,state[1],name1["Weiche"],name2["Test"],name3["""[,]\"])',
   ];
 
   for (var i = 0; i < cmds.length; i++) {

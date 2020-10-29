@@ -95,7 +95,7 @@ class Request {
         continue;
       }
 
-      if (quoteCount % 2 == 0) continue;
+      if (quoteCount % 2 == 1) continue;
 
       if (char == '[') inBrackets = true;
       if (char == ']') inBrackets = false;
