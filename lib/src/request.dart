@@ -6,13 +6,16 @@ import 'argument.dart';
 class Request {
   /// The command of the request (cmd)
   final String command;
+
   /// The id of the object
   final int id;
+
   /// The argument list
   final Set<Argument> arguments;
 
   /// Creates a [Request] with the supplied [command], [id] and [arguments]
-  Request({@required this.command, @required this.id, this.arguments = const {}});
+  Request(
+      {@required this.command, @required this.id, this.arguments = const {}});
 
   /// Construct a get request
   factory Request.get(int id, [Set<Argument> arguments = const {}]) =>
@@ -47,8 +50,7 @@ class Request {
       Request(command: 'unlink', id: id, arguments: arguments);
 
   /// Construct a queryObjects request
-  factory Request.queryObjects(int id,
-          [Set<Argument> arguments = const {}]) =>
+  factory Request.queryObjects(int id, [Set<Argument> arguments = const {}]) =>
       Request(command: 'queryObjects', id: id, arguments: arguments);
 
   /// Parse request from string

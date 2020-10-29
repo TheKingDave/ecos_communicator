@@ -5,6 +5,7 @@ import 'argument.dart';
 class Event {
   /// id of the corresponding object
   final int id;
+
   /// The supplied argument
   // Subject to change (to list)?
   final Argument argument;

@@ -4,8 +4,10 @@ import 'package:meta/meta.dart';
 class Argument {
   /// The name of the argument (option)
   final String name;
+
   /// The value of the argument (parameter)
   final String value;
+
   /// The type of the parameter
   final ArgumentType type;
 
@@ -13,8 +15,7 @@ class Argument {
   ///
   /// Throws an [ArgumentError] if the type is [NATIVE] or [STRING] and no value
   /// is supplied
-  Argument(
-      {@required this.name, this.value, this.type = ArgumentType.NATIVE}) {
+  Argument({@required this.name, this.value, this.type = ArgumentType.NATIVE}) {
     if (type != ArgumentType.NO_VALUE && value == null) {
       throw ArgumentError('If type is not NO_VALUE a value must be provided.');
     }
@@ -84,7 +85,7 @@ class Argument {
   @override
   String toString() {
     final t = type.toString().substring(14);
-    if(type == ArgumentType.NO_VALUE) {
+    if (type == ArgumentType.NO_VALUE) {
       return 'Parameter{name: $name, type: $t}';
     }
     return 'Parameter{name: $name, value: $value, type: $t}';

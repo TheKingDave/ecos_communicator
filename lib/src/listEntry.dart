@@ -6,6 +6,7 @@ import 'argument.dart';
 class ListEntry {
   /// The object id
   final int id;
+
   /// The argument list ([Argument]*)
   final List<Argument> parameters;
 

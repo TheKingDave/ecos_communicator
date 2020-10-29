@@ -5,12 +5,16 @@ import 'listEntry.dart';
 class Reply {
   /// The type of the reply (REPLY, EVENT)
   final String type;
+
   /// The command or id of the Reply
   final String extra;
+
   /// The status number (errno)
   final int status;
+
   /// The status message (errmsg)
   final String statusMsg;
+
   /// The list entries ([ListEntry]*)
   final List<ListEntry> entries;
 

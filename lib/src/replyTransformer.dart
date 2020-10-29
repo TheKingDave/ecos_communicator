@@ -6,6 +6,7 @@ import 'reply.dart';
 class ReplyTransformer implements StreamTransformer<String, Reply> {
   StreamController _controller;
   StreamSubscription _subscription;
+
   /// If the stream should be closed when an error occurred
   final bool cancelOnError;
 

@@ -77,8 +77,7 @@ class SimpleConnection {
     _socket = socket;
 
     if (pingInterval != null) {
-      _timer =
-          Timer.periodic(pingInterval, (_) => _send('test("#ping")'));
+      _timer = Timer.periodic(pingInterval, (_) => _send('test("#ping")'));
     }
 
     var stream = _socket
@@ -102,7 +101,7 @@ class SimpleConnection {
   }
 
   void _send(String str) {
-    if(_isClosed) return;
+    if (_isClosed) return;
     _socket.write('${str}\n');
   }
 
@@ -113,7 +112,7 @@ class SimpleConnection {
 
   /// Closes the socket and all streams
   void close() async {
-    if(_isClosed) return;
+    if (_isClosed) return;
     _isClosed = true;
     _timer?.cancel();
     await _socket.close();
