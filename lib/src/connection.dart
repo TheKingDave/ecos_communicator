@@ -23,6 +23,7 @@ class Connection {
 
   Socket _socket;
   Timer _timer;
+  bool _isClosed = false;
 
   StreamController<Response> _responseController;
 
@@ -59,7 +60,7 @@ class Connection {
 
     if (pingInterval != null) {
       _timer =
-          Timer.periodic(pingInterval, (_) => _socket.write('test("#ping")\n'));
+          Timer.periodic(pingInterval, (_) => _send('test("#ping")'));
     }
 
     var stream = _socket
@@ -83,6 +84,7 @@ class Connection {
   }
 
   void _send(String str) {
+    if(_isClosed) return;
     _socket.write('${str}\n');
   }
 
@@ -93,6 +95,8 @@ class Connection {
 
   /// Closes the socket
   void close() async {
+    if(_isClosed) return;
+    _isClosed = true;
     _timer?.cancel();
     await _socket.close();
     _socket.destroy();
