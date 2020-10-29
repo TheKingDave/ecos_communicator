@@ -20,6 +20,7 @@ class Main {
   final int id;
   ObjectConnection _con;
   bool _state;
+  StreamSubscription _stdinSub;
 
   Main(this.address, this.id) {
     main();
@@ -39,7 +40,8 @@ class Main {
     var sub = makeSub();
 
     // cli code
-    stdin.transform(utf8.decoder).transform(LineSplitter()).listen((line) {
+    _stdinSub =
+        stdin.transform(utf8.decoder).transform(LineSplitter()).listen((line) {
       switch (line) {
         case 's':
           // Switch object 20000
@@ -59,6 +61,8 @@ class Main {
         case 'close':
           // Close connection
           _con.close();
+          _stdinSub.cancel();
+          print('End');
           break;
       }
     });
