@@ -4,14 +4,14 @@ import 'dart:collection';
 import 'event.dart';
 import 'package:meta/meta.dart';
 
-import 'command.dart';
+import 'request.dart';
 import 'connection.dart';
-import 'parameter.dart';
-import 'response.dart';
+import 'argument.dart';
+import 'reply.dart';
 
 class ObjectConnection {
   final Connection _connection;
-  final Queue<Completer<Response>> _commandQueue = Queue();
+  final Queue<Completer<Reply>> _commandQueue = Queue();
   final Map<int, StreamController<Event>> _events = {};
 
   ObjectConnection(this._connection) {
@@ -22,8 +22,8 @@ class ObjectConnection {
     return ObjectConnection(Connection(address: address, port: port));
   }
 
-  Future<Response> send(Command cmd) async {
-    Completer<Response> completer;
+  Future<Reply> send(Request cmd) async {
+    Completer<Reply> completer;
     completer = Completer();
     _commandQueue.add(completer);
     _connection.commands.add(cmd);
@@ -35,16 +35,16 @@ class ObjectConnection {
       return _events[id].stream;
     }
     final controller = StreamController<Event>.broadcast(
-        onListen: () => send(Command.request(id, {Parameter.name('view')})),
+        onListen: () => send(Request.request(id, {Argument.name('view')})),
         onCancel: () {
-          send(Command.release(id, {Parameter.name('view')}));
+          send(Request.release(id, {Argument.name('view')}));
           _events.remove(id);
         });
     _events[id] = controller;
     return controller.stream;
   }
 
-  void _responseHandler(Response response) {
+  void _responseHandler(Reply response) {
     switch (response.type) {
       case 'REPLY':
         _replyHandler(response);
@@ -57,7 +57,7 @@ class ObjectConnection {
     }
   }
 
-  void _replyHandler(Response response) {
+  void _replyHandler(Reply response) {
     _commandQueue.removeFirst().complete(response);
   }
 

@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 
-import 'command.dart';
-import 'response.dart';
+import 'request.dart';
+import 'reply.dart';
 import 'responseTransformer.dart';
 
 class Connection {
@@ -25,15 +25,15 @@ class Connection {
   Timer _timer;
   bool _isClosed = false;
 
-  StreamController<Response> _responseController;
+  StreamController<Reply> _responseController;
 
   /// Stream of responses gotten from the ECoS
-  Stream<Response> get responses => _responseController.stream;
+  Stream<Reply> get responses => _responseController.stream;
 
-  StreamController<Command> _commandController;
+  StreamController<Request> _commandController;
 
   /// Sink to send commands to the ECoS
-  StreamSink<Command> get commands => _commandController.sink;
+  StreamSink<Request> get commands => _commandController.sink;
 
   /// Creates a connection, the socket will only open if the [open] method is called
   Connection(
@@ -79,7 +79,7 @@ class Connection {
     _commandController.stream.listen(_onCommand);
   }
 
-  void _onCommand(Command cmd) {
+  void _onCommand(Request cmd) {
     _send(cmd.str);
   }
 

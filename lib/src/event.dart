@@ -1,14 +1,14 @@
-import 'response.dart';
-import 'parameter.dart';
+import 'reply.dart';
+import 'argument.dart';
 
 class Event {
   final int id;
-  // Subject to change?
-  final Parameter parameter;
+  // Subject to change (to list)?
+  final Argument parameter;
 
   Event({this.id, this.parameter});
 
-  factory Event.fromResponse(Response resp) {
+  factory Event.fromResponse(Reply resp) {
     return Event(
       id: int.parse(resp.extra),
       parameter: resp.lines.first.parameters.first,
@@ -19,4 +19,12 @@ class Event {
   String toString() {
     return 'Event{id: $id, parameter: $parameter}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Event && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

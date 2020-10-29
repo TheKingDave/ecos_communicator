@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'response.dart';
+import 'reply.dart';
 
-class ResponseTransformer implements StreamTransformer<String, Response> {
+class ResponseTransformer implements StreamTransformer<String, Reply> {
   StreamController _controller;
   StreamSubscription _subscription;
   bool cancelOnError;
@@ -10,7 +10,7 @@ class ResponseTransformer implements StreamTransformer<String, Response> {
   Stream<String> _stream;
 
   ResponseTransformer({bool sync = false, this.cancelOnError}) {
-    _controller = StreamController<Response>(
+    _controller = StreamController<Reply>(
         onListen: _onListen,
         onCancel: _onCancel,
         onPause: () {
@@ -43,7 +43,7 @@ class ResponseTransformer implements StreamTransformer<String, Response> {
   void onData(String data) {
     _appendData(data);
     if (data.startsWith('<END')) {
-      _controller.add(Response.fromString(_rawResponse));
+      _controller.add(Reply.fromString(_rawResponse));
       _rawResponse = '';
     }
   }
@@ -53,7 +53,7 @@ class ResponseTransformer implements StreamTransformer<String, Response> {
   }
 
   @override
-  Stream<Response> bind(Stream<String> stream) {
+  Stream<Reply> bind(Stream<String> stream) {
     _stream = stream;
     return _controller.stream;
   }

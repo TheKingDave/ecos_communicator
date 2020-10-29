@@ -33,7 +33,7 @@ class Main {
 
     // Get state of object [id]
     final resp =
-        await _connection.send(Command.get(id, {Parameter.name('state')}));
+        await _connection.send(Request.get(id, {Argument.name('state')}));
     _state = resp.lines.first.parameters.first.value == '1';
 
     print('Switch: $swStr');
@@ -50,7 +50,7 @@ class Main {
           _state = !_state;
           print('Switch: $swStr');
           _connection.send(
-              Command.set(id, {Parameter.native('state', _state ? '1' : '0')}));
+              Request.set(id, {Argument.native('state', _state ? '1' : '0')}));
           break;
         case 'c':
           // Cancel subscription to events from [id]
