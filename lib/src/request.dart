@@ -11,6 +11,7 @@ class Request {
   /// The argument list
   final Set<Argument> arguments;
 
+  /// Creates a [Request] with the supplied [command], [id] and [arguments]
   Request({@required this.command, @required this.id, this.arguments = const {}});
 
   /// Construct a get request

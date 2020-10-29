@@ -11,6 +11,8 @@ include: package:pedantic/analysis_options.yaml
 linter:
   rules:
     - prefer_relative_imports
+    - package_api_docs
+    - public_member_api_docs
 
 analyzer:
 #   exclude:

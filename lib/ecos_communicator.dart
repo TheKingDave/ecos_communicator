@@ -9,3 +9,4 @@ export 'src/reply.dart';
 export 'src/listEntry.dart';
 export 'src/connection.dart';
 export 'src/objectConnection.dart';
+export 'src/event.dart';

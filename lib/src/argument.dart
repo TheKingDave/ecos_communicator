@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// An ECoS Argument
+/// An ECoS argument for a request
 class Argument {
   /// The name of the argument (option)
   final String name;
@@ -9,6 +9,10 @@ class Argument {
   /// The type of the parameter
   final ArgumentType type;
 
+  /// Constructs an argument
+  ///
+  /// Throws an [ArgumentError] if the type is [NATIVE] or [STRING] and no value
+  /// is supplied
   Argument(
       {@required this.name, this.value, this.type = ArgumentType.NATIVE}) {
     if (type != ArgumentType.NO_VALUE && value == null) {
@@ -16,17 +20,17 @@ class Argument {
     }
   }
 
-  /// Construct an argument of the type NATIVE
+  /// Constructs an argument of the type NATIVE
   factory Argument.native(String name, String value) {
     return Argument(name: name, value: value, type: ArgumentType.NATIVE);
   }
 
-  /// Construct an argument of the type STRING
+  /// Constructs an argument of the type STRING
   factory Argument.string(String name, String value) {
     return Argument(name: name, value: value, type: ArgumentType.STRING);
   }
 
-  /// Construct an argument of the type NO_VALUE
+  /// Constructs an argument of the type NO_VALUE
   factory Argument.name(String name) {
     return Argument(name: name, type: ArgumentType.NO_VALUE);
   }
@@ -34,6 +38,8 @@ class Argument {
   static final _paramRegex = RegExp(r'^(?<name>[^\[]+)(\[(?<value>.+)\])?$');
 
   /// Parse argument from string
+  ///
+  /// Throws an [ArgumentError] if the string is not properly formatted
   factory Argument.fromString(String str) {
     final match = _paramRegex.firstMatch(str.trim());
     if (match == null) {
@@ -58,6 +64,8 @@ class Argument {
   }
 
   /// If the [type] is STRING the value is properly escaped
+  ///
+  ///
   String get escapedValue {
     if (type == ArgumentType.STRING) {
       return '"${value.replaceAll('"', '""')}"';
@@ -96,4 +104,5 @@ class Argument {
 }
 
 /// Type enum for Arguments
+// ignore: public_member_api_docs
 enum ArgumentType { NATIVE, STRING, NO_VALUE }

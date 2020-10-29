@@ -6,10 +6,15 @@ import 'reply.dart';
 class ReplyTransformer implements StreamTransformer<String, Reply> {
   StreamController _controller;
   StreamSubscription _subscription;
-  bool cancelOnError;
+  /// If the stream should be closed when an error occurred
+  final bool cancelOnError;
 
   Stream<String> _stream;
 
+  /// Creates a ReplyTransformer
+  ///
+  /// It congregate the lines until an `<END` is received and then parses it
+  /// into a [Reply]
   ReplyTransformer({bool sync = false, this.cancelOnError}) {
     _controller = StreamController<Reply>(
         onListen: _onListen,
@@ -22,13 +27,8 @@ class ReplyTransformer implements StreamTransformer<String, Reply> {
         });
   }
 
-  ReplyTransformer.broadcast({bool sync = false, this.cancelOnError}) {
-    _controller = StreamController.broadcast(
-        onListen: _onListen, onCancel: _onCancel, sync: sync);
-  }
-
   void _onListen() {
-    _subscription = _stream.listen(onData,
+    _subscription = _stream.listen(_onData,
         onError: _controller.addError,
         onDone: _controller.close,
         cancelOnError: cancelOnError);
@@ -41,7 +41,7 @@ class ReplyTransformer implements StreamTransformer<String, Reply> {
 
   String _rawResponse = '';
 
-  void onData(String data) {
+  void _onData(String data) {
     _appendData(data);
     if (data.startsWith('<END')) {
       _controller.add(Reply.fromString(_rawResponse));

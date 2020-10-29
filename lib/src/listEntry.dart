@@ -9,6 +9,7 @@ class ListEntry {
   /// The argument list ([Argument]*)
   final List<Argument> parameters;
 
+  /// Constructs a [ListEntry]
   ListEntry({this.id, this.parameters});
 
   /// Constructs a ListEntry from string

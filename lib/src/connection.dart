@@ -8,6 +8,22 @@ import 'request.dart';
 import 'reply.dart';
 import 'replyTransformer.dart';
 
+/// A basic connection to the ECoS with type parsing
+///
+/// This class will connect to the supplied [address] and [port].
+///
+/// This connection will be established when the [responses] stream gets
+/// listened to or the [open()] method is called.
+///
+/// The connection supports the features ping and timeout. These features can be
+/// independently turned on or off.
+///
+/// [pingInterval] sets the time time interval where a ping is sent to the ECoS
+/// this is done by using the command `test("#ping")` which the ECoS will answer
+/// to with `#ping`.
+///
+/// [timeout] sets the time until the connection will be closed if no message is
+/// received within this time.
 class Connection {
   /// The address (ip) of the ECoS
   final String address;
@@ -35,7 +51,8 @@ class Connection {
   /// Sink to send commands to the ECoS
   StreamSink<Request> get commands => _commandController.sink;
 
-  /// Creates a connection, the socket will only open if the [open] method is called
+  /// Creates a connection, the socket will only be open if the [open()] method
+  /// is called
   Connection(
       {@required this.address,
       this.port = 15471,
@@ -47,7 +64,8 @@ class Connection {
 
   /// Opens the socket
   ///
-  /// This method is automatically called when the [commands] stream is listened to
+  /// This method is automatically called when the [commands] stream is listened
+  /// to
   ///
   /// If the socket is already opened it does nothing
   void open() {

@@ -9,8 +9,12 @@ class Event {
   // Subject to change (to list)?
   final Argument argument;
 
+  /// Constructs a Event
+  ///
+  /// This is merely a data holding class
   Event({this.id, this.argument});
 
+  /// Parses an [Event] from a [Reply]
   factory Event.fromResponse(Reply resp) {
     return Event(
       id: int.parse(resp.extra),

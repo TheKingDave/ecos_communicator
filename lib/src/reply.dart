@@ -14,6 +14,8 @@ class Reply {
   /// The list entries ([ListEntry]*)
   final List<ListEntry> entries;
 
+  /// Creates a Reply with the supplied [type], [extra], [status], [statusMsg]
+  /// and [entries]
   Reply({this.type, this.extra, this.status, this.statusMsg, this.entries});
 
   static final _headerRegex = RegExp(r'^<(?<type>\w+) (?<extra>.*)>$');
