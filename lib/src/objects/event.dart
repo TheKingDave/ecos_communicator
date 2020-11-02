@@ -1,7 +1,21 @@
 import 'reply.dart';
 import 'argument.dart';
 
-/// Event sent from the ECoS
+/// Event sent by the ECoS
+/// 
+/// Syntax:
+/// ```
+/// <EVENT $id>
+/// $id $argument
+/// <END 0 (OK)>
+/// ```
+/// 
+/// Example:
+/// ```
+/// <EVENT 20000>
+/// 20000 state[1]
+/// <END 0 (OK)>
+/// ```
 class Event {
   /// id of the corresponding object
   final int id;

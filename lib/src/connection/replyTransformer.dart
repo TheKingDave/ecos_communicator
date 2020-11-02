@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'reply.dart';
+import '../objects/reply.dart';
 
-/// Stream transformer to create reply's from Strings
+/// Transforms a [String] [Stream] into a [Reply] [Stream]
 class ReplyTransformer implements StreamTransformer<String, Reply> {
   StreamController _controller;
   StreamSubscription _subscription;

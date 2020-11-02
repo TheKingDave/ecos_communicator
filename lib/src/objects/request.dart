@@ -3,6 +3,13 @@ import 'package:meta/meta.dart';
 import 'argument.dart';
 
 /// ECoS request
+/// 
+/// Syntax: `$command($id, $arguments...)`
+/// 
+/// Examples:
+/// * `get(1, info)`
+/// * `set(20000, state[1], name1["Line 1"], name2["Line 2"], name3["Line 3"])`
+/// * `reqeust(1000, view)`
 class Request {
   /// The command of the request (cmd)
   final String command;

@@ -1,6 +1,14 @@
 import 'package:meta/meta.dart';
 
 /// An ECoS argument for a request
+/// 
+/// Syntax: `$name` | `$name[$value]` | `$name["$value"]`
+/// 
+/// Examples:
+/// * `state`
+/// * `state[1]`
+/// * `name1["Switch 1"]`
+///
 class Argument {
   /// The name of the argument (option)
   final String name;
@@ -13,7 +21,7 @@ class Argument {
 
   /// Constructs an argument
   ///
-  /// Throws an [ArgumentError] if the type is [NATIVE] or [STRING] and no value
+  /// Throws an [ArgumentError] if the type is [ArgumentType.NATIVE] or [ArgumentType.STRING] and no value
   /// is supplied
   Argument({@required this.name, this.value, this.type = ArgumentType.NATIVE}) {
     if (type != ArgumentType.NO_VALUE && value == null) {

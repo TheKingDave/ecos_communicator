@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 import '../objects/request.dart';
 import '../objects/reply.dart';
-import '../objects/replyTransformer.dart';
+import 'replyTransformer.dart';
 
 /// A basic connection to the ECoS with type parsing
 ///
@@ -18,7 +18,7 @@ import '../objects/replyTransformer.dart';
 /// The connection supports the features ping and timeout. These features can be
 /// independently turned on or off.
 ///
-/// [pingInterval] sets the time time interval where a ping is sent to the ECoS
+/// [pingInterval] sets the time interval where a ping is sent to the ECoS
 /// this is done by using the command `test("#ping")` which the ECoS will answer
 /// to with `#ping`.
 ///

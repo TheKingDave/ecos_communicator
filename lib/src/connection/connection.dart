@@ -11,8 +11,8 @@ import '../objects/reply.dart';
 
 /// A connection to a ECoS with more sophisticated control
 ///
-/// This class supports the direct answer of Requests and splits the Events from
-/// the rest of the Reply stream so they can be listened to as a stream.
+/// This class supports the direct answer of [Request] and splits the [Event]
+/// from the rest of the [Reply] [Stream] so they can be listened to as a stream.
 class Connection {
   final SimpleConnection _connection;
   final Queue<Completer<Reply>> _commandQueue = Queue();
@@ -90,7 +90,7 @@ class Connection {
     _events[id].add(event);
   }
 
-  /// Closes all event [Stream]s and closes the [BasicConnection]
+  /// Closes all event [Stream]s and closes the [SimpleConnection]
   void close() async {
     _events.forEach((key, value) => value.close());
     await _connection.close();

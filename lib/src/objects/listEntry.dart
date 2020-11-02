@@ -3,6 +3,10 @@ import 'package:collection/collection.dart';
 import 'argument.dart';
 
 /// A ECoS ListEntry
+/// 
+/// Syntax: `$id $argument...`
+/// 
+/// Example: `20000 state[1]`
 class ListEntry {
   /// The object id
   final int id;

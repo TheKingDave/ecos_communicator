@@ -2,6 +2,21 @@ import 'package:collection/collection.dart';
 import 'listEntry.dart';
 
 /// Reply sent from the ECoS
+/// 
+/// Syntax:
+/// ```
+/// <$type $extra>
+/// $entries
+/// <END $state ($statusMsg)>
+/// ```
+/// 
+/// Example:
+/// ```
+/// <REPLY get(20000, state, name1)>
+/// 20000 state[1]
+/// 20000 name1["Weiche"]
+/// <END 0 (OK)>
+/// ```
 class Reply {
   /// The type of the reply (REPLY, EVENT)
   final String type;
