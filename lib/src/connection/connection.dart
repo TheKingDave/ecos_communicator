@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'event.dart';
+import '../objects/event.dart';
 import 'package:meta/meta.dart';
 
-import 'request.dart';
+import '../objects/request.dart';
 import 'simpleConnection.dart';
-import 'argument.dart';
-import 'reply.dart';
+import '../objects/argument.dart';
+import '../objects/reply.dart';
 
 /// A connection to a ECoS with more sophisticated control
 ///

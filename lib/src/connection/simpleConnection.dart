@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 
-import 'request.dart';
-import 'reply.dart';
-import 'replyTransformer.dart';
+import '../objects/request.dart';
+import '../objects/reply.dart';
+import '../objects/replyTransformer.dart';
 
 /// A basic connection to the ECoS with type parsing
 ///

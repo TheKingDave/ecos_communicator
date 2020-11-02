@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:ecos_communicator/src/argument.dart';
+import 'package:ecos_communicator/src/objects/argument.dart';
 
 void main() {
   final types = [

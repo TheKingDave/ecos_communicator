@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
-import 'package:ecos_communicator/src/request.dart';
-import 'package:ecos_communicator/src/argument.dart';
+import 'package:ecos_communicator/src/objects/request.dart';
+import 'package:ecos_communicator/src/objects/argument.dart';
 
 void main() {
   final cmds = [

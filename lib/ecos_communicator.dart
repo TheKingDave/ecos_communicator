@@ -3,10 +3,10 @@
 /// Example... or something
 library ecos_communicator;
 
-export 'src/argument.dart';
-export 'src/request.dart';
-export 'src/reply.dart';
-export 'src/listEntry.dart';
-export 'src/simpleConnection.dart';
-export 'src/connection.dart';
-export 'src/event.dart';
+export 'src/objects/argument.dart';
+export 'src/objects/request.dart';
+export 'src/objects/reply.dart';
+export 'src/objects/listEntry.dart';
+export 'src/connection/simpleConnection.dart';
+export 'src/connection/connection.dart';
+export 'src/objects/event.dart';
