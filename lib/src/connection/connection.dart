@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:ecos_communicator/src/connection/replyError.dart';
+
 import '../objects/event.dart';
 import 'package:meta/meta.dart';
 
@@ -78,8 +80,11 @@ class Connection {
     }
   }
 
-  void _replyHandler(Reply response) {
-    _commandQueue.removeFirst().complete(response);
+  void _replyHandler(Reply reply) {
+    if(reply.status != 0) {
+      return _commandQueue.removeFirst().completeError(ReplyError.fromReply(reply));
+    }
+    _commandQueue.removeFirst().complete(reply);
   }
 
   void _eventHandler(Event event) {
