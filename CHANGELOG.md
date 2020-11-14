@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Moved ConnectionSettings out from Connection/SimpleConnection
+
 ## 1.1.0
 
 * Separated Response and Reply

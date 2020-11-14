@@ -63,7 +63,8 @@ class SimpleConnection {
     _socket = socket;
 
     if (settings.pingInterval != null) {
-      _timer = Timer.periodic(settings.pingInterval, (_) => _send('test("#ping")'));
+      _timer =
+          Timer.periodic(settings.pingInterval, (_) => _send('test("#ping")'));
     }
 
     var stream = _socket
