@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import '../objects/reply.dart';
+import '../objects/response.dart';
 
 /// Transforms a [String] [Stream] into a [Reply] [Stream]
-class ReplyTransformer implements StreamTransformer<String, Reply> {
+class ResponseTransformer implements StreamTransformer<String, Response> {
   StreamController _controller;
   StreamSubscription _subscription;
 
@@ -16,8 +16,8 @@ class ReplyTransformer implements StreamTransformer<String, Reply> {
   ///
   /// It congregate the lines until an `<END` is received and then parses it
   /// into a [Reply]
-  ReplyTransformer({bool sync = false, this.cancelOnError}) {
-    _controller = StreamController<Reply>(
+  ResponseTransformer({bool sync = false, this.cancelOnError}) {
+    _controller = StreamController<Response>(
         onListen: _onListen,
         onCancel: _onCancel,
         onPause: () {
@@ -45,13 +45,13 @@ class ReplyTransformer implements StreamTransformer<String, Reply> {
   void _onData(String data) {
     _rawResponse += '\n$data';
     if (data.startsWith('<END')) {
-      _controller.add(Reply.fromString(_rawResponse));
+      _controller.add(Response.fromString(_rawResponse));
       _rawResponse = '';
     }
   }
 
   @override
-  Stream<Reply> bind(Stream<String> stream) {
+  Stream<Response> bind(Stream<String> stream) {
     _stream = stream;
     return _controller.stream;
   }

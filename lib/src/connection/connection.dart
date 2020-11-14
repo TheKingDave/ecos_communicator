@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:ecos_communicator/src/connection/replyError.dart';
-
 import '../objects/event.dart';
 import 'package:meta/meta.dart';
 
@@ -10,6 +8,8 @@ import '../objects/request.dart';
 import 'simpleConnection.dart';
 import '../objects/argument.dart';
 import '../objects/reply.dart';
+import '../objects/response.dart';
+import 'replyError.dart';
 
 /// A connection to a ECoS with more sophisticated control
 ///
@@ -67,10 +67,10 @@ class Connection {
     return controller.stream;
   }
 
-  void _responseHandler(Reply response) {
+  void _responseHandler(Response response) {
     switch (response.type) {
       case 'REPLY':
-        _replyHandler(response);
+        _replyHandler(Reply.fromResponse(response));
         break;
       case 'EVENT':
         _eventHandler(Event.fromResponse(response));

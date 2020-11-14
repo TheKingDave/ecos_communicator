@@ -34,7 +34,7 @@ class Main {
     // Get state of object [id]
     final resp =
         await _connection.send(Request.get(id, {Argument.name('state')}));
-    _state = resp.entries.first.parameters.first.value == '1';
+    _state = resp.entries.first.arguments.first.value == '1';
 
     print('Switch: $swStr');
 
@@ -46,7 +46,7 @@ class Main {
         stdin.transform(utf8.decoder).transform(LineSplitter()).listen((line) {
       switch (line) {
         case 's':
-          // Switch object 20000
+          // Switch object [id]
           _state = !_state;
           print('Switch: $swStr');
           _connection.send(

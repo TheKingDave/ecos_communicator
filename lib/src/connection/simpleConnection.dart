@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:meta/meta.dart';
 
 import '../objects/request.dart';
-import '../objects/reply.dart';
-import 'replyTransformer.dart';
+import '../objects/response.dart';
+import 'responseTransformer.dart';
 
 /// A basic connection to the ECoS with type parsing
 ///
@@ -41,10 +41,10 @@ class SimpleConnection {
   Timer _timer;
   bool _isClosed = false;
 
-  StreamController<Reply> _responseController;
+  StreamController<Response> _responseController;
 
   /// Stream of responses gotten from the ECoS
-  Stream<Reply> get responses => _responseController.stream;
+  Stream<Response> get responses => _responseController.stream;
 
   StreamController<Request> _commandController;
 
@@ -90,7 +90,7 @@ class SimpleConnection {
 
     stream
         .where((line) => line[0] != '#') // ignore comments
-        .transform(ReplyTransformer())
+        .transform(ResponseTransformer())
         .pipe(_responseController);
 
     _commandController.stream.listen(_onCommand);

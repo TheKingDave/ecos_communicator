@@ -1,5 +1,8 @@
-import 'reply.dart';
-import 'argument.dart';
+import 'package:collection/collection.dart';
+import 'package:ecos_communicator/ecos_communicator.dart';
+
+import 'listEntry.dart';
+import 'response.dart';
 
 /// Event sent by the ECoS
 ///
@@ -17,36 +20,60 @@ import 'argument.dart';
 /// <END 0 (OK)>
 /// ```
 class Event {
-  /// id of the corresponding object
+  /// The id of the Reply
   final int id;
 
-  /// The supplied argument
-  // Subject to change (to list)?
-  final Argument argument;
+  /// The status number (errno)
+  final int status;
 
-  /// Constructs a Event
-  ///
-  /// This is merely a data holding class
-  Event({this.id, this.argument});
+  /// The status message (errmsg)
+  final String statusMsg;
 
-  /// Parses an [Event] from a [Reply]
-  factory Event.fromResponse(Reply reply) {
+  /// The list entries ([ListEntry]*)
+  final List<ListEntry> entries;
+
+  /// Returns the first [ListEntry] from [entries]
+  ListEntry get entry {
+    return entries.first;
+  }
+
+  /// Returns the first [Argument] from the first [Entry]
+  Argument get argument {
+    return entry.argument;
+  }
+
+  /// Creates a Reply with the supplied parameters
+  Event({this.id, this.status, this.statusMsg, this.entries});
+
+  /// Creates a [Event] from a [Response]
+  factory Event.fromResponse(Response response) {
+    assert(response.type == 'EVENT');
     return Event(
-      id: int.parse(reply.extra),
-      argument: reply.entries.first.parameters.first,
-    );
+        id: int.parse(response.extra),
+        status: response.status,
+        statusMsg: response.statusMsg,
+        entries: response.entries);
   }
 
   @override
   String toString() {
-    return 'Event{id: $id, parameter: $argument}';
+    return 'Event{id: $id, status: $status, statusMsg: $statusMsg, entries: $entries}';
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Event && runtimeType == other.runtimeType && id == other.id;
+      other is Event &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          status == other.status &&
+          statusMsg == other.statusMsg &&
+          ListEquality().equals(entries, other.entries);
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      status.hashCode ^
+      statusMsg.hashCode ^
+      ListEquality().hash(entries);
 }

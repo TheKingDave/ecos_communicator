@@ -12,22 +12,27 @@ class ListEntry {
   final int id;
 
   /// The argument list ([Argument]*)
-  final List<Argument> parameters;
+  final List<Argument> arguments;
+
+  /// Get the first argument of the ListEntry
+  Argument get argument {
+    return arguments.first;
+  }
 
   /// Constructs a [ListEntry]
-  ListEntry({this.id, this.parameters});
+  ListEntry({this.id, this.arguments});
 
   /// Constructs a ListEntry from string
   factory ListEntry.fromString(String str) {
     final split = str.split(' ');
     final id = int.parse(split.removeAt(0));
     final parameters = split.map((e) => Argument.fromString(e)).toList();
-    return ListEntry(id: id, parameters: parameters);
+    return ListEntry(id: id, arguments: parameters);
   }
 
   @override
   String toString() {
-    return 'ResponseLine{id: $id, parameter: $parameters}';
+    return 'ListEntry{id: $id, parameter: $arguments}';
   }
 
   @override
@@ -36,8 +41,8 @@ class ListEntry {
       other is ListEntry &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          ListEquality().equals(parameters, other.parameters);
+          ListEquality().equals(arguments, other.arguments);
 
   @override
-  int get hashCode => id.hashCode ^ parameters.hashCode;
+  int get hashCode => id.hashCode ^ arguments.hashCode;
 }
