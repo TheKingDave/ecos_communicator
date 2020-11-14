@@ -1,5 +1,6 @@
 import 'package:collection/src/equality.dart';
 import 'package:meta/meta.dart';
+
 import 'argument.dart';
 
 /// ECoS request

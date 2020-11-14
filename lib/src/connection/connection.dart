@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:ecos_communicator/src/connection/connectionSettings.dart';
-
-import '../objects/event.dart';
-import 'package:meta/meta.dart';
-
-import '../objects/request.dart';
-import 'simpleConnection.dart';
 import '../objects/argument.dart';
+import '../objects/event.dart';
 import '../objects/reply.dart';
+import '../objects/request.dart';
 import '../objects/response.dart';
+import 'connectionSettings.dart';
 import 'replyError.dart';
+import 'simpleConnection.dart';
 
 /// A connection to a ECoS with more sophisticated control
 ///

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'connectionSettings.dart';
 import '../objects/request.dart';
 import '../objects/response.dart';
+import 'connectionSettings.dart';
 import 'responseTransformer.dart';
 
 /// A basic connection to the ECoS with type parsing

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+
 import 'listEntry.dart';
 
 /// Response sent from the ECoS
