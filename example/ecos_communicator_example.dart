@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ecos_communicator/ecos_communicator.dart';
+import 'package:ecos_communicator/src/connection/connectionSettings.dart';
 
 void main(List<String> args) {
   // Check cli arguments
@@ -29,7 +30,7 @@ class Main {
 
   void main() async {
     // Create connection
-    _connection = Connection.raw(address: address);
+    _connection = Connection(ConnectionSettings(address: address));
 
     // Get state of object [id]
     final resp =

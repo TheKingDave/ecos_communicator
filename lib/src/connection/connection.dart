@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:ecos_communicator/src/connection/connectionSettings.dart';
+
 import '../objects/event.dart';
 import 'package:meta/meta.dart';
 
@@ -21,21 +23,9 @@ class Connection {
   final Map<int, StreamController<Event>> _events = {};
 
   /// Creates a connection with a supplied [SimpleConnection]
-  Connection(this._connection) {
+  Connection(ConnectionSettings connectionSettings)
+      : _connection = SimpleConnection(connectionSettings) {
     _connection.responses.listen(_responseHandler);
-  }
-
-  /// Creates a connection which internally creates a [SimpleConnection]
-  factory Connection.raw(
-      {@required address,
-      port = 15471,
-      pingInterval = const Duration(seconds: 1),
-      timeout = const Duration(seconds: 2)}) {
-    return Connection(SimpleConnection(
-        address: address,
-        port: port,
-        pingInterval: pingInterval,
-        timeout: timeout));
   }
 
   /// Sends a request to the ECoS and returns the [Reply] in a [Future]

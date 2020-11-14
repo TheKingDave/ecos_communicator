@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:meta/meta.dart';
-
+import 'connectionSettings.dart';
 import '../objects/request.dart';
 import '../objects/response.dart';
 import 'responseTransformer.dart';
@@ -25,17 +24,8 @@ import 'responseTransformer.dart';
 /// [timeout] sets the time until the connection will be closed if no message is
 /// received within this time.
 class SimpleConnection {
-  /// The address (ip) of the ECoS
-  final String address;
-
-  /// The port to connect to (default: 15471)
-  final int port;
-
-  /// The interval between sending pings to the ECoS
-  final Duration pingInterval;
-
-  /// How long until the timeout is reached
-  final Duration timeout;
+  /// The connection settings
+  final ConnectionSettings settings;
 
   Socket _socket;
   Timer _timer;
@@ -53,11 +43,7 @@ class SimpleConnection {
 
   /// Creates a connection, the socket will only be open if the [open()] method
   /// is called
-  SimpleConnection(
-      {@required this.address,
-      this.port = 15471,
-      this.pingInterval = const Duration(seconds: 1),
-      this.timeout = const Duration(seconds: 2)}) {
+  SimpleConnection(this.settings) {
     _responseController = StreamController(onListen: open);
     _commandController = StreamController();
   }
@@ -70,22 +56,22 @@ class SimpleConnection {
   /// If the socket is already opened it does nothing
   void open() {
     if (_socket != null) return;
-    Socket.connect(address, port).then(_onOpen);
+    Socket.connect(settings.address, settings.port).then(_onOpen);
   }
 
   void _onOpen(Socket socket) {
     _socket = socket;
 
-    if (pingInterval != null) {
-      _timer = Timer.periodic(pingInterval, (_) => _send('test("#ping")'));
+    if (settings.pingInterval != null) {
+      _timer = Timer.periodic(settings.pingInterval, (_) => _send('test("#ping")'));
     }
 
     var stream = _socket
         .map((data) => String.fromCharCodes(data))
         .transform(LineSplitter());
 
-    if (timeout != null) {
-      stream = stream.timeout(timeout, onTimeout: _onTimeout);
+    if (settings.timeout != null) {
+      stream = stream.timeout(settings.timeout, onTimeout: _onTimeout);
     }
 
     stream
