@@ -2,14 +2,14 @@ import 'package:collection/collection.dart';
 import 'listEntry.dart';
 
 /// Reply sent from the ECoS
-/// 
+///
 /// Syntax:
 /// ```
 /// <$type $extra>
 /// $entries
 /// <END $state ($statusMsg)>
 /// ```
-/// 
+///
 /// Example:
 /// ```
 /// <REPLY get(20000, state, name1)>

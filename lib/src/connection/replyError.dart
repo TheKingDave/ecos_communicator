@@ -1,17 +1,19 @@
 import '../objects/reply.dart';
 
-/// Error thrown when the status of a reply is not 0 
+/// Error thrown when the status of a reply is not 0
 class ReplyError implements Exception {
   /// The status code
   final int status;
+
   /// The status message
   final String statusMsg;
+
   /// The reply that that is the source of this Error
   final Reply reply;
 
   /// Creates [ReplyError] with the specified values
   ReplyError({this.status, this.statusMsg, this.reply});
-  
+
   /// Creates a [ReplyError] from an [Reply]
   factory ReplyError.fromReply(Reply reply) {
     return ReplyError(

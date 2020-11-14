@@ -2,14 +2,14 @@ import 'reply.dart';
 import 'argument.dart';
 
 /// Event sent by the ECoS
-/// 
+///
 /// Syntax:
 /// ```
 /// <EVENT $id>
 /// $id $argument
 /// <END 0 (OK)>
 /// ```
-/// 
+///
 /// Example:
 /// ```
 /// <EVENT 20000>

@@ -81,8 +81,10 @@ class Connection {
   }
 
   void _replyHandler(Reply reply) {
-    if(reply.status != 0) {
-      return _commandQueue.removeFirst().completeError(ReplyError.fromReply(reply));
+    if (reply.status != 0) {
+      return _commandQueue
+          .removeFirst()
+          .completeError(ReplyError.fromReply(reply));
     }
     _commandQueue.removeFirst().complete(reply);
   }

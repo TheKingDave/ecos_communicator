@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
 /// An ECoS argument for a request
-/// 
+///
 /// Syntax: `$name` | `$name[$value]` | `$name["$value"]`
-/// 
+///
 /// Examples:
 /// * `state`
 /// * `state[1]`
