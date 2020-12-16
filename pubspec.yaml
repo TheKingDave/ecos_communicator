@@ -1,6 +1,6 @@
 name: ecos_communicator
 description: A library to easily communicate with the ECoS command station.
-version: 1.2.0
+version: 1.2.1
 
 repository: https://github.com/TheKingDave/ecos_communicator
 issue_tracker: https://github.com/TheKingDave/ecos_communicator/issues

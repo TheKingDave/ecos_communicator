@@ -1,3 +1,8 @@
+## 1.2.1
+
+* Exported all types
+* Some null safety
+
 ## 1.2.0
 
 * Moved ConnectionSettings out from Connection/SimpleConnection
