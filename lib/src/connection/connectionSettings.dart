@@ -15,7 +15,7 @@ class ConnectionSettings {
   final Duration timeout;
 
   /// Creates a [ConnectionSettings] from the supplied parameters
-  ConnectionSettings(
+  const ConnectionSettings(
       {@required this.address,
       this.port = 15471,
       this.pingInterval = const Duration(seconds: 1),

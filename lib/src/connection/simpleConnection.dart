@@ -102,8 +102,8 @@ class SimpleConnection {
     if (_isClosed) return;
     _isClosed = true;
     _timer?.cancel();
-    await _socket.close();
-    _socket.destroy();
-    await _commandController.close();
+    await _socket?.close();
+    _socket?.destroy();
+    await _commandController?.close();
   }
 }

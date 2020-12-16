@@ -86,7 +86,7 @@ class Connection {
 
   /// Closes all event [Stream]s and closes the [SimpleConnection]
   void close() async {
-    _events.forEach((key, value) => value.close());
-    await _connection.close();
+    _events?.forEach((key, value) => value.close());
+    await _connection?.close();
   }
 }
