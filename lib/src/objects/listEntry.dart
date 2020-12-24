@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 
 import 'argument.dart';
+import '../utils/stringExtension.dart';
 
 /// A ECoS ListEntry
 ///
@@ -24,7 +25,7 @@ class ListEntry {
 
   /// Constructs a ListEntry from string
   factory ListEntry.fromString(String str) {
-    final split = str.split(' ');
+    final split = str.splitWithQuotes(' ');
     final id = int.parse(split.removeAt(0));
     final parameters = split.map((e) => Argument.fromString(e)).toList();
     return ListEntry(id: id, arguments: parameters);
