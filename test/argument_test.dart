@@ -45,6 +45,10 @@ void main() {
     [
       r'name1["Test""\[]"]',
       Argument(name: 'name1', value: r'Test"\[]', type: ArgumentType.STRING)
+    ],
+    [
+      r'name2["Test "" \[] "]',
+      Argument(name: 'name2', value: r'Test " \[] ', type: ArgumentType.STRING)
     ]
   ];
 
