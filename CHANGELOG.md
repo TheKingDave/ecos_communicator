@@ -1,3 +1,7 @@
+## 1.2.2
+
+* Fixed bug with splitting multiple arguments in one line
+
 ## 1.2.1
 
 * Exported all types
