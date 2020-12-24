@@ -92,7 +92,7 @@ class Argument {
 
   @override
   String toString() {
-    final t = type.toString().substring(14);
+    final t = type.toString().substring(13);
     if (type == ArgumentType.NO_VALUE) {
       return 'Parameter{name: $name, type: $t}';
     }
